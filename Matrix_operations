@@ -1,0 +1,158 @@
+import math
+
+#FUNKSJONER
+def matrise_nullmatrise(rader, kolonner):
+	nullmatrise=[]
+	for i in range(rader):
+		nullmatrise.Add([0.0]*kolonner)
+	return nullmatrise
+
+
+def matrise_neg(matrise):
+	rader=len(matrise)
+	kolonner=len(matrise[0])
+	neg = matrise_nullmatrise(rader, kolonner)
+	for rad in range(rader):
+		for kol in range (kolonner):
+			neg[rad][kol]=(-1)*matrise[rad][kol]
+	return neg
+	
+def matrise_dot(X, Y):
+	X_rader=len(X)
+	Y_kolonner=len(Y[0])
+	Y_rader=len(Y)
+	dot= matrise_nullmatrise(X_rader, Y_kolonner)
+	for i in range(X_rader): 
+		for j in range(Y_kolonner): 
+			for k in range(Y_rader):
+				dot[i][j] += X[i][k]*Y[k][j]	
+	return dot
+	
+def matrise_vektor_dot(M, V):
+	M_rader=len(M)
+	V_rader=len(V)
+	dot= matrise_nullmatrise(M_rader, 1)
+	for i in range(M_rader): 
+		for k in range(V_rader):
+			int = 0
+			dot[i][0] += M[i][k]*V[k][0]	
+	return dot	
+
+def matrise_sub(X,Y):
+	rader=len(X)
+	kolonner=len(X[0])
+	sub=matrise_nullmatrise(rader, kolonner)
+	for rad in range(rader):
+		for kol in range(kolonner):
+			sub[rad][kol]=X[rad][kol]-Y[rad][kol]
+	return sub
+
+def matrise_add(X,Y):
+	rader=len(X)
+	kolonner=len(X[0])
+	sub=matrise_nullmatrise(rader, kolonner)
+	for rad in range(rader):
+		for kol in range(kolonner):
+			sub[rad][kol]=X[rad][kol]+Y[rad][kol]
+	return add
+	
+def matrise_2x2_invers(X):
+	a=X[0][0]
+	b=X[0][1]
+	c=X[1][0]
+	d=X[1][1]
+	invers=matrise_nullmatrise(2,2)
+	nevner=float (a*d)-(b*c)
+	invers[0][0]= truediv(d,nevner)
+	invers[0][1]= truediv((-b),nevner)
+	invers[1][0]= truediv((-c),nevner)
+	invers[1][1]= truediv(a,nevner)
+	return invers
+	
+def matrise_tallmult(M, tall):
+	rader=len(M)
+	kolonner=len(M[0])
+	tallmult=matrise_nullmatrise(rader, kolonner)
+	for rad in range(rader):
+		for kol in range(kolonner):
+			tallmult[rad][kol]=tall*M[rad][kol]
+	return tallmult
+	
+#Trengs for invers
+def matrise_4x4_det(M):
+	#rad 1
+	m11=M[0][0]
+	m12=M[0][1]
+	m13=M[0][2]
+	m14=M[0][3]
+	#rad 2
+	m21=M[1][0]
+	m22=M[1][1]
+	m23=M[1][2]
+	m24=M[1][3]
+	#rad 3
+	m31=M[2][0]
+	m32=M[2][1]
+	m33=M[2][2]
+	m34=M[2][3]
+	#rad 4
+	m41=M[3][0]
+	m42=M[3][1]
+	m43=M[3][2]
+	m44=M[3][3]	
+	det_M = float (m11*m22*m33*m44 + m11*m23*m34*m42 + m11*m24*m32*m43 - m11*m24*m33*m42 - m11*m23*m32*m44 - m11*m22*m34*m43 - m12*m21*m33*m44 - m13*m21*m34*m42 - m14*m21*m32*m43 + m14*m21*m33*m42 + m13*m21*m32*m44 + m12*m21*m34*m43 + m12*m23*m31*m44 + m13*m24*m31*m42 + m14*m22*m31*m43 - m14*m23*m31*m42 - m13*m22*m31*m44 - m12*m24*m31*m43 - m12*m23*m34*m41 - m13*m24*m32*m41 - m14*m22*m33*m41 + m14*m23*m32*m41 + m13*m22*m34*m41 + m12*m24*m33*m41)
+	
+	return det_M
+
+#Trengs for invers
+def matrise_4x4_adjugate(M):
+	#A=Adjugate
+	A=matrise_nullmatrise(4,4)
+	#rad 1
+	m11=M[0][0]
+	m12=M[0][1]
+	m13=M[0][2]
+	m14=M[0][3]
+	#rad 2
+	m21=M[1][0]
+	m22=M[1][1]
+	m23=M[1][2]
+	m24=M[1][3]
+	#rad 3
+	m31=M[2][0]
+	m32=M[2][1]
+	m33=M[2][2]
+	m34=M[2][3]
+	#rad 4
+	m41=M[3][0]
+	m42=M[3][1]
+	m43=M[3][2]
+	m44=M[3][3]
+	
+	A[0][0]= float (m22*m33*m44 + m23*m34*m42 + m24*m32*m43 - m24*m33*m42 - m23*m32*m44 - m22*m34*m43)
+	A[0][1]= float (-m12*m33*m44 - m13*m34*m42 - m14*m32*m43 + m14*m33*m42 + m13*m32*m44 + m12*m34*m43)
+	A[0][2]= float (m12*m23*m44 + m13*m24*m42 + m14*m22*m43 - m14*m23*m42 - m13*m22*m44 - m12*m24*m43)
+	A[0][3]= float (-m12*m23*m34 - m13*m24*m32 - m14*m22*m33 + m14*m23*m32 + m13*m22*m34 + m12*m24*m33)
+	
+	A[1][0]= float (-m21*m33*m44 - m23*m34*m41 - m24*m31*m43 + m24*m33*m41 + m23*m31*m44 + m21*m34*m43)
+	A[1][1]= float (m11*m33*m44 + m13*m34*m41 + m14*m31*m43 - m14*m33*m41 - m13*m31*m44 - m11*m34*m43)
+	A[1][2]= float (-m11*m23*m44 - m13*m24*m41 - m14*m21*m43 + m14*m23*m41 + m13*m21*m44 + m11*m24*m43)
+	A[1][3]= float (m11*m23*m34 + m13*m24*m31 + m14*m21*m33 - m14*m23*m31 - m13*m21*m34 - m11*m24*m33)
+	
+	A[2][0]= float (m21*m32*m44 + m22*m34*m41 + m24*m31*m42 -m24*m32*m41 - m22*m31*m44 - m21*m34*m42)
+	A[2][1]= float (-m11*m32*m44 - m12*m34*m41 - m14*m31*m42 + m14*m32*m41 + m12*m31*m44 + m11*m34*m42)
+	A[2][2]= float (m11*m22*m44 + m12*m24*m41 + m14*m21*m42 - m14*m22*m41 - m12*m21*m44 - m11*m24*m42)
+	A[2][3]= float (-m11*m22*m34 - m12*m24*m31 -m14*m21*m32 + m14*m22*m31 + m12*m21*m34 + m11*m24*m32)
+	
+	A[3][0]=float (-m21*m32*m43 - m22*m33*m41 - m23*m31*m42 + m23*m32*m41 + m22*m31*m43 + m21*m33*m42)
+	A[3][1]=float (m11*m32*m43 + m12*m33*m41 + m13*m31*m42 - m13*m32*m41 - m12*m31*m43 - m11*m33*m42)
+	A[3][2]=float (-m11*m22*m43 - m12*m23*m41 - m13*m21*m42 + m13*m22*m41 + m12*m21*m43 + m11*m23*m42)
+	A[3][3]=float (m11*m22*m33 + m12*m23*m31 + m13*m21*m32 - m13*m22*m31 - m12*m21*m33 - m11*m23*m32)	
+	return A
+	
+def matrise_4x4_invers(m):
+	det_m=float (matrise_4x4_det(m))
+	adj_matrise = matrise_4x4_adjugate(m)
+	faktor= truediv(1,det_m)
+	invers = matrise_tallmult(adj_matrise, faktor)	
+	return invers
